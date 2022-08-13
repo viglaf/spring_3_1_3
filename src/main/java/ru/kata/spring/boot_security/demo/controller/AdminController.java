@@ -22,10 +22,10 @@ public class AdminController {
         return "admin";
     }
 
-    @GetMapping("/user-create")
-    public String createUserForm(User user){
-        return "user-create";
-    }
+//    @GetMapping("/user-create")
+//    public String createUserForm(User user){
+//        return "user-create";
+//    }
 
     @GetMapping("/user-create")
     public String createUser(User user){

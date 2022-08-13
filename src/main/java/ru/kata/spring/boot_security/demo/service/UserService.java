@@ -39,13 +39,13 @@ public class UserService implements UserDetailsService {
         userRepository.deleteById(id);
     }
 
-    public User findByUserName (String name){
-        return userRepository.findByUserName(name);
+    public User findByName (String name){
+        return userRepository.findByName(name);
     }
     @Override
     @Transactional
     public UserDetails loadUserByUsername(String name) throws UsernameNotFoundException {
-        User user = findByUserName(name);
+        User user = findByName(name);
         if (user == null) {
             throw new UsernameNotFoundException(String.format("User '%s' not found", name));
         }
