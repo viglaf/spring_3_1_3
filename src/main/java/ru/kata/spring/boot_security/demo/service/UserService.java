@@ -12,7 +12,9 @@ import ru.kata.spring.boot_security.demo.repository.UserRepository;
 
 import javax.transaction.Transactional;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -55,4 +57,11 @@ public class UserService implements UserDetailsService {
     private Collection<? extends GrantedAuthority> mapRolesToAuthorities(Collection<Role> roles) {
         return roles.stream().map(role -> new SimpleGrantedAuthority(role.getName())).collect(Collectors.toList());
     }
+    public Set<Role> getRoles() {
+        Set<Role> roles = new HashSet<>();
+        roles.add(new Role(1,"ROLE_ADMIN"));
+        roles.add(new Role(2,"ROLE_USER"));
+        return roles;
+    }
+    User user = new User(1,"andrey", "andreev", 22, "andrey", getRoles());
 }
