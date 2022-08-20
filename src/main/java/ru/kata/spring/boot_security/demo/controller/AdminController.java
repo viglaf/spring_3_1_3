@@ -5,48 +5,40 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import ru.kata.spring.boot_security.demo.entity.Role;
 import ru.kata.spring.boot_security.demo.entity.User;
-import ru.kata.spring.boot_security.demo.service.UserService;
+import ru.kata.spring.boot_security.demo.service.UserServiceImpl;
 
 import java.security.Principal;
+import java.util.List;
 
 @Controller
 @RequestMapping("/admin")
 public class AdminController {
 
-    private final UserService userService;
+    private final UserServiceImpl userServiceImpl;
 
     @Autowired
-    public AdminController(UserService userService) {
-        this.userService = userService;
+    public AdminController(UserServiceImpl userServiceImpl) {
+        this.userServiceImpl = userServiceImpl;
     }
 
     @GetMapping("")
-    public String findAll(Model model, Principal principal) {
-        User user = userService.findByName(principal.getName());
-        model.addAttribute("admin", user);
-        model.addAttribute("users", userService.findAll());
-        for (Role el : user.getRoles()) {
-            if (el.getName().equals("ROLE_ADMIN")) {
-                model.addAttribute("role", "ADMIN");
-                break;
-            }
-            if (el.getName().equals("ROLE_USER")) {
-                model.addAttribute("role", "USER");
-                break;
-            }
-        }
+    public String findAll(Principal principal, Model model) {
+        User user = (User) userServiceImpl.loadUserByUsername(principal.getName());
+        model.addAttribute("user", user);
+        List<User> users = userServiceImpl.findAll();
+        model.addAttribute("users", users);
         return "admin";
     }
 
     @PostMapping("/user-save")
     public String saveUser(User user) {
-        userService.saveUser(user);
+        userServiceImpl.saveUser(user);
         return "redirect:/admin";
     }
 
     @GetMapping("/user-delete/{id}")
     public String deleteUser(@PathVariable("id") int id) {
-        userService.deleteById(id);
+        userServiceImpl.deleteById(id);
         return "redirect:/admin";
     }
 }
