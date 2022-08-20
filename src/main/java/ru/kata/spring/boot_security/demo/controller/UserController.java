@@ -22,19 +22,11 @@ public class UserController {
     }
 
     @GetMapping("")
-    public String userInfoPage(Principal principal, Model model) {
-        User user = userServiceImpl.findByName(principal.getName());
-        for (Role el : user.getRoles()) {
-            if(el.getName().equals("ROLE_ADMIN")) {
-                model.addAttribute("role", "ADMIN");
-                break;
-            }
-            if (el.getName().equals("ROLE_USER")){
-                model.addAttribute("role", "USER");
-                break;
-            }
-        }
+    public String findAll(Principal principal, Model model) {
+        User user = (User) userServiceImpl.loadUserByUsername(principal.getName());
         model.addAttribute("user", user);
-        return "user";
+        List<User> users = userServiceImpl.findAll();
+        model.addAttribute("users", users);
+        return "users";
     }
 }
